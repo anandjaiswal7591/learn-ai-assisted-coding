@@ -1,6 +1,6 @@
 # User authentication REST API
 
-Express REST API for user registration, login, and role-based authorization backed by SQLite. It runs on Bun and stores only an id, email, display name, role, password hash, and creation timestamp for each user.
+Express REST API for user registration, login, and role-based authorization backed by SQLite. It runs on Bun and stores only an id, unique username, email, display name, role, password hash, and creation timestamp for each user.
 
 ## Setup
 
@@ -25,17 +25,27 @@ The API listens on `http://localhost:3000` by default. The SQLite database is cr
 
 ```json
 {
+  "username": "alex_123",
   "email": "alex@example.com",
   "name": "Alex",
   "password": "a-password-at-least-8-characters"
 }
 ```
 
-Returns `201` with a sanitized user and a one-hour JWT. Email addresses are case-insensitive and passwords are hashed before storage.
+Returns `201` with a sanitized user and a one-hour JWT. Usernames are case-insensitive, must be 3-30 characters using lowercase letters, numbers, or underscores, and passwords are hashed before storage.
 
 ### Login
 
-`POST /api/auth/login` with `email` and `password`. Returns `401` for invalid credentials and otherwise returns the sanitized user and JWT.
+`POST /api/auth/login` with `username` and `password`:
+
+```json
+{
+  "username": "alex_123",
+  "password": "a-password-at-least-8-characters"
+}
+```
+
+Returns `401` for invalid credentials and otherwise returns the sanitized user and JWT.
 
 ### Current user
 
